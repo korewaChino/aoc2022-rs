@@ -92,7 +92,7 @@ fn main() {
             RPS::from(players.next().unwrap().chars().next().unwrap()),
         );
 
-        println!("{:?} vs {:?}", p1, p2);
+        //println!("{:?} vs {:?}", p1, p2);
 
         let winner = judge(&p1, &p2);
         let mut score = [0, 0];
@@ -113,7 +113,7 @@ fn main() {
             _ => (),
         }
 
-        println!("Score: {:?}", score);
+        //println!("Score: {:?}", score);
 
         total_score1[0] += score[0];
         total_score1[1] += score[1];
@@ -135,21 +135,21 @@ fn main() {
         let p2 = match p2_char {
             // X means p2 loses
             'X' => {
-                println!("p2 loses");
+                //println!("p2 loses");
                 p1.get_win()
             }
             'Y' => {
-                println!("p2 draws");
+                //println!("p2 draws");
                 p1.clone()
             }
             'Z' => {
-                println!("p2 wins");
+                //println!("p2 wins");
                 p1.get_loss()
             }
             _ => panic!("Invalid character"),
         };
 
-        println!("{:?} vs {:?}", p1, p2);
+        //println!("{:?} vs {:?}", p1, p2);
 
         let winner = judge(&p1, &p2);
         let mut score = [0, 0];
@@ -170,7 +170,7 @@ fn main() {
             _ => (),
         }
 
-        println!("Score: {:?}", score);
+        //println!("Score: {:?}", score);
 
         total_score2[0] += score[0];
         total_score2[1] += score[1];
@@ -178,5 +178,5 @@ fn main() {
 
     println!("Total score: {:?}", total_score2);
 
-    // println!("Hello, world!");
+    // //println!("Hello, world!");
 }
