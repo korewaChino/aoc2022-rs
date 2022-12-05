@@ -1,5 +1,5 @@
 // Advent of Code 2022, Day 2
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 enum RPS {
     Rock,
     Paper,
@@ -32,15 +32,6 @@ impl RPS {
             RPS::Rock => RPS::Scissors,
             RPS::Paper => RPS::Rock,
             RPS::Scissors => RPS::Paper,
-        }
-    }
-
-    /// Get the draw matchup
-    pub fn get_draw(&self) -> RPS {
-        match self {
-            RPS::Rock => RPS::Rock,
-            RPS::Paper => RPS::Paper,
-            RPS::Scissors => RPS::Scissors,
         }
     }
 }
@@ -149,7 +140,7 @@ fn main() {
             }
             'Y' => {
                 println!("p2 draws");
-                p1.get_draw()
+                p1.clone()
             }
             'Z' => {
                 println!("p2 wins");
