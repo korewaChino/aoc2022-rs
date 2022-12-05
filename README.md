@@ -2,7 +2,7 @@
 
 This repository contains my solutions to the [Advent of Code 2022](https://adventofcode.com/2022) challenges.
 
-I admit some of these are very inefficient, but I want a solution that is easy to understand and modify, not necessarily the most efficient.
+I admit some of these aren't very inefficient, but I want a solution that is easy to understand and modify, not necessarily the most efficient.
 
 Sometimes, clean code is more important than fast code.
 
