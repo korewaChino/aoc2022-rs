@@ -7,9 +7,9 @@ I admit some of these are very inefficient, but I want a solution that is easy t
 Sometimes, clean code is more important than fast code.
 
 # To-Do List (meta)
-- [ ] Refactor crate structure
+- [x] Refactor crate structure
 - [ ] Add tests
-- [ ] Add benchmarks
+- [x] Add benchmarks
 - [ ] Clean up code make it DRY
 
 ## Checklist
