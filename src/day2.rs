@@ -6,6 +6,10 @@ enum RPS {
     Scissors,
 }
 
+pub fn generator(input: &str) -> String {
+    input.to_string()
+}
+
 impl RPS {
     // let's write write a function to determine the winner and loser
 
@@ -68,17 +72,8 @@ impl From<char> for RPS {
     }
 }
 
-fn main() {
-    let input = include_str!("day2.txt");
 
-    // the score is in the enum declaration
-    // 1 for rock, 2 for paper, 3 for scissors
-    // +0 if loss, +3 is draw, +6 if win
-
-    // In the first round, your opponent will choose Rock (A), and you should choose Paper (Y). This ends in a win for you with a score of 8 (2 because you chose Paper + 6 because you won).
-    // In the second round, your opponent will choose Paper (B), and you should choose Rock (X). This ends in a loss for you with a score of 1 (1 + 0).
-    // The third round is a draw with both players choosing Scissors, giving you a score of 3 + 3 = 6.
-
+pub fn part_1(input: &str) -> i32 {
     let mut total_score1 = [0, 0];
 
     println!("===Part 1===");
@@ -120,9 +115,11 @@ fn main() {
     }
 
     println!("Total score: {:?}", total_score1);
+    total_score1[1]
 
-    println!("===Part 2===");
-    println!("Elf told us that the second column is different now!");
+}
+
+pub fn part_2(input: &str) -> i32 {
     let mut total_score2 = [0, 0];
 
     for i in input.lines() {
@@ -177,6 +174,7 @@ fn main() {
     }
 
     println!("Total score: {:?}", total_score2);
+    total_score2[1]
 
-    // //println!("Hello, world!");
+
 }
