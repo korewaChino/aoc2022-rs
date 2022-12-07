@@ -11,11 +11,13 @@ Sometimes, clean code is more important than fast code.
 - [ ] Add tests
 - [x] Add benchmarks
 - [ ] Clean up code make it DRY
+- [ ] Rewrite solutions and make them more readable and robust (for cheat solutions)
 
 ## Checklist
 
 - [x] Day 1
 - [x] Day 2
-- [ ] Day 3
-- [ ] Day 4
-- [ ] Day 5
+- [x] Day 3
+- [x] Day 4 (cheated, credits to asaaki)
+- [x] Day 5
+- [x] Day 6 (cheated, credits to orlp)
