@@ -76,7 +76,7 @@ impl From<char> for RPS {
 pub fn part_1(input: &str) -> i32 {
     let mut total_score1 = [0, 0];
 
-    println!("===Part 1===");
+    // println!("===Part 1===");
 
     for i in input.lines() {
         // separate the 2 player inputs with a space
@@ -114,7 +114,7 @@ pub fn part_1(input: &str) -> i32 {
         total_score1[1] += score[1];
     }
 
-    println!("Total score: {:?}", total_score1);
+    // println!("Total score: {:?}", total_score1);
     total_score1[1]
 
 }
@@ -173,7 +173,7 @@ pub fn part_2(input: &str) -> i32 {
         total_score2[1] += score[1];
     }
 
-    println!("Total score: {:?}", total_score2);
+    // println!("Total score: {:?}", total_score2);
     total_score2[1]
 
 
