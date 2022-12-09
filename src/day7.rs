@@ -254,10 +254,56 @@ pub fn part_2(input: &Tree) -> usize {
     // now we need to filter folders
     const TOTAL: usize = 70000000;
     const REQUIRED: usize = 30000000;
+    let mut already_counted = Vec::new();
 
     // println
 
-    let folders = input
+    let usage = input
+        .iter()
+        .filter(|(p, e)| {
+            // deduplicate the folders
+            if already_counted.contains(p) {
+                false
+            } else {
+                // check if subfolder is already counted
+                for p2 in already_counted.iter() {
+                    if p.starts_with(p2) {
+                        return false;
+                    } else {
+                        continue;
+                    }
+                }
+                already_counted.push(p);
+                true
+            }
+        })
+        .map(|e| {
+            // println!("e: {:?}", e);
+            match e {
+                (_p, Entry::File(s)) => {
+                    // println!("file: {:?}", p);
+                    *s
+                }
+                (p, Entry::Dir) => {
+                    println!("dir: {:?}", p);
+                    let a = input.size_shallow(p);
+                    println!("a: {:?}", a);
+                    a
+                }
+            }
+        })
+        .sum::<usize>();
+
+    // let usage = folders.iter();
+
+    println!("usage: {:?}", usage);
+
+    let needed = REQUIRED - (TOTAL - usage);
+    println!("needed: {:?}", needed);
+
+    // let mut files = Vec::new();
+
+    let res = input
         .iter()
         .filter(|(_, e)| {
             // deduplicate the folders
@@ -282,24 +328,8 @@ pub fn part_2(input: &Tree) -> usize {
             }
         })
         .collect::<Vec<usize>>();
-    let used = input.size(&PathBuf::from("/"));
-    println!("used: {:?}", used);
-    
-    
-    
-    
-    // get usage of entire tree
-    let usage = input.iter().map(|(p, e)| match e {
-        Entry::File(s) => 0,
-        Entry::Dir => input.size_shallow(p),
-    }).sum::<usize>();
-    
-    println!("usage: {:?}", usage);
-    
-    let needed = REQUIRED - (TOTAL - folders.iter().sum::<usize>());
-    println!("needed: {:?}", needed);
 
+    println!("res: {:?}", res);
 
-
-    0
+    *res.iter().filter(|s| **s >= needed).min().unwrap()
 }
