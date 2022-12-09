@@ -199,29 +199,18 @@ pub fn part_1(input: &Tree) -> usize {
     // part 1 question is to find all directories below 100000 bytes and sum all of them
     // process can count files more than once
 
-    let mut already_counted = Vec::new();
+    // let mut already_counted = Vec::new();
 
     let bigfolders = {
         // let mut files = Vec::new();
 
         let res = input
             .iter()
-            .filter(|(p, e)| {
+            .filter(|(_, e)| {
                 // deduplicate the folders
-                if already_counted.contains(p) {
-                    false
-                } else {
-
-                    // check if subfolder is already counted
-                    for p2 in already_counted.iter() {
-                        if p.starts_with(p2) {
-                            return false;
-                        } else {
-                            continue;
-                        }
-                    }
-                    already_counted.push(p);
-                    true
+                match e {
+                    Entry::Dir => true,
+                    Entry::File(_) => false,
                 }
             })
             .map(|e| {
@@ -240,7 +229,6 @@ pub fn part_1(input: &Tree) -> usize {
                 }
             })
             .filter(|s| {
-
                 // println!("s: {:?}", s);
                 if *s <= 100000 {
                     println!("true");
@@ -249,8 +237,8 @@ pub fn part_1(input: &Tree) -> usize {
                     println!("false");
                     false
                 }
-
-            }).collect::<Vec<usize>>();
+            })
+            .collect::<Vec<usize>>();
 
         println!("res: {:?}", res);
         res
@@ -260,4 +248,58 @@ pub fn part_1(input: &Tree) -> usize {
     bigfolders.iter().sum::<usize>()
 
     // bigfolders.iter().map(|(_, size, _)| size).sum()
+}
+
+pub fn part_2(input: &Tree) -> usize {
+    // now we need to filter folders
+    const TOTAL: usize = 70000000;
+    const REQUIRED: usize = 30000000;
+
+    // println
+
+    let folders = input
+        .iter()
+        .filter(|(_, e)| {
+            // deduplicate the folders
+            match e {
+                Entry::Dir => true,
+                Entry::File(_) => false,
+            }
+        })
+        .map(|e| {
+            // println!("e: {:?}", e);
+            match e {
+                (_p, Entry::File(s)) => {
+                    // println!("file: {:?}", p);
+                    *s
+                }
+                (p, Entry::Dir) => {
+                    println!("dir: {:?}", p);
+                    let a = input.size_shallow(p);
+                    println!("a: {:?}", a);
+                    a
+                }
+            }
+        })
+        .collect::<Vec<usize>>();
+    let used = input.size(&PathBuf::from("/"));
+    println!("used: {:?}", used);
+    
+    
+    
+    
+    // get usage of entire tree
+    let usage = input.iter().map(|(p, e)| match e {
+        Entry::File(s) => 0,
+        Entry::Dir => input.size_shallow(p),
+    }).sum::<usize>();
+    
+    println!("usage: {:?}", usage);
+    
+    let needed = REQUIRED - (TOTAL - folders.iter().sum::<usize>());
+    println!("needed: {:?}", needed);
+
+
+
+    0
 }
