@@ -13,49 +13,48 @@ pub fn generator(input: &str) -> Tree {
 
     let mut pbuf = PathBuf::from("/");
     while let Some(out) = lines.next() {
-        if out.starts_with("$ cd") {
-            let cd = &out[5..];
-            // println!("cd: {:?}", cd);
+        println!("out: {:?}", out);
+        if out.starts_with('$') {
+            println!("{:?}", out);
+            if out[2..].starts_with("cd") {
+                let cd = &out[5..];
+                // println!("cd: {:?}", cd);
 
-            if cd.starts_with('/') {
-                pbuf = PathBuf::from(cd);
-            } else {
-                pbuf = pbuf.join(cd).absolutize().unwrap().to_path_buf();
-            }
-
-            println!("cd: {:?}", cd);
-
-            println!("dir_buf: {:?}", pbuf);
-        }
-
-        if out.starts_with("$ ls") {
-            // the following lines are the output of ls
-            for out in lines.by_ref() {
-                if out.starts_with('$') {
-                    break;
-                }
-                println!("out: {:?}", out);
-
-                let mut parts = out.split_whitespace();
-                let size = parts.next().unwrap();
-
-                // if the size is a number, then it's a file
-                if let Ok(size) = size.parse::<usize>() {
-                    let name = parts.next().unwrap();
-                    let path = pbuf.join(name);
-                    // println!("path: {:?}", path);
-                    sizes.insert(path, Entry::File(size));
+                if cd.starts_with('/') {
+                    pbuf = PathBuf::from(cd);
                 } else {
-                    // dir
-                    let name = parts.next().unwrap();
-                    let path = pbuf.join(name);
-                    // println!("path: {:?}", path);
-                    sizes.insert(path, Entry::Dir);
+                    pbuf = pbuf.join(cd).absolutize().unwrap().to_path_buf();
                 }
+
+                println!("cd: {:?}", cd);
+
+                println!("dir_buf: {:?}", pbuf);
+                continue;
+            } else if out[2..].starts_with("ls") {
+            }
+        } else {
+            let mut parts = out.split_whitespace();
+            // println!("parts: {:?}", parts);
+            let size = parts.next().unwrap();
+            // println!("size: {:?}", size);
+
+            // if the size is a number, then it's a file
+            if let Ok(size) = size.parse::<usize>() {
+                let name = parts.next().unwrap();
+                let path = pbuf.join(name);
+                // println!("path: {:?}", path);
+                sizes.insert(path, Entry::File(size));
+            } else {
+                // dir
+                let name = parts.next().unwrap();
+                let path = pbuf.join(name);
+                // println!("path: {:?}", path);
+                println!("is dir: {:?}", name);
+                sizes.insert(path, Entry::Dir);
             }
         }
     }
-    println!("sizes: {:#?}", sizes);
+    // println!("sizes: {:#?}", sizes);
     Tree { inner: sizes }
 }
 
@@ -158,8 +157,8 @@ impl Tree {
                             }
                         }
                     }
-                    // println!("size: {:?}", size);
                 }
+                // println!("size: {:?}", size);
                 size
             }
             None => 0,
@@ -197,7 +196,7 @@ impl Tree {
 
 pub fn part_1(input: &Tree) -> usize {
     // we have a btreemap of paths and sizes
-    // part 1 question is to find all directories over 100000 bytes and sum all of them
+    // part 1 question is to find all directories below 100000 bytes and sum all of them
     // process can count files more than once
 
     // let mut already_counted = Vec::new();
@@ -205,25 +204,42 @@ pub fn part_1(input: &Tree) -> usize {
     let bigfolders = {
         // let mut files = Vec::new();
 
-        let res = input.inner.values().filter(|e| {
-            if let Entry::File(size) = e {
-                size <= &100_000
-            } else {
-                false
-            }
+        let res = input
+            .iter()
+            .map(|e| {
+                // println!("e: {:?}", e);
+                match e {
+                    (_p, Entry::File(s)) => {
+                        // println!("file: {:?}", p);
+                        *s
+                    }
+                    (p, Entry::Dir) => {
+                        println!("dir: {:?}", p);
+                        let a = input.size(p);
+                        println!("a: {:?}", a);
+                        a
+                    }
+                }
+            })
+            .filter(|s| {
 
-        }).map(|e| {
-            if let Entry::File(size) = e {
-                *size
-            } else {
-                0
-            }
-        }).sum::<usize>();
+                // println!("s: {:?}", s);
+                if *s <= 100000 {
+                    println!("true");
+                    true
+                } else {
+                    println!("false");
+                    false
+                }
+
+            }).collect::<Vec<usize>>();
+
+        println!("res: {:?}", res);
         res
     };
 
     // println!("bigfolders: {:#?}", bigfolders);
-    bigfolders
+    bigfolders.iter().sum::<usize>()
 
     // bigfolders.iter().map(|(_, size, _)| size).sum()
 }
