@@ -124,13 +124,11 @@ impl Tree {
             Some(Entry::Dir) => {
                 let mut size = 0;
                 for (p, e) in self.iter() {
-
                     // println!("size: {:?}", p);
                     if p == path {
                         continue;
                     }
                     if p.starts_with(path) {
-
                         // println!("p: {:?}", p);
                         size += match e {
                             Entry::File(size) => *size,
@@ -145,7 +143,7 @@ impl Tree {
                                     let mut s = 0;
 
                                     // recursively add the size of the directory
-                                    for (p,e) in self.ls(p) {
+                                    for (p, e) in self.ls(p) {
                                         // println!("p2: {:?}", p);
                                         s += match e {
                                             Entry::File(size) => {
@@ -205,26 +203,27 @@ pub fn part_1(input: &Tree) -> usize {
     // let mut already_counted = Vec::new();
 
     let bigfolders = {
-        let mut files = Vec::new();
+        // let mut files = Vec::new();
 
-        for (i, (path, entry)) in input.iter().enumerate() {
-            // println!("path: {:?}", path);
-            // println!("entry: {:?}", entry);
-            // println!("ls: {:?}", input.ls(path));
-            println!("{}/{}: {:?}", i, input.inner.len(), path);
-            if let Entry::Dir = entry {
-                let size = input.size(path);
-                if size <= 100000 {
-                    files.push((path.clone(), size, input.ls(path)));
-                }
+        let res = input.inner.values().filter(|e| {
+            if let Entry::File(size) = e {
+                size <= &100_000
+            } else {
+                false
             }
-        }
 
-        println!("files: {:#?}", files);
-        files
+        }).map(|e| {
+            if let Entry::File(size) = e {
+                *size
+            } else {
+                0
+            }
+        }).sum::<usize>();
+        res
     };
 
-    println!("bigfolders: {:#?}", bigfolders);
+    // println!("bigfolders: {:#?}", bigfolders);
+    bigfolders
 
-    bigfolders.iter().map(|(_, size, _)| size).sum()
+    // bigfolders.iter().map(|(_, size, _)| size).sum()
 }
