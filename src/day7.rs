@@ -199,13 +199,31 @@ pub fn part_1(input: &Tree) -> usize {
     // part 1 question is to find all directories below 100000 bytes and sum all of them
     // process can count files more than once
 
-    // let mut already_counted = Vec::new();
+    let mut already_counted = Vec::new();
 
     let bigfolders = {
         // let mut files = Vec::new();
 
         let res = input
             .iter()
+            .filter(|(p, e)| {
+                // deduplicate the folders
+                if already_counted.contains(p) {
+                    false
+                } else {
+
+                    // check if subfolder is already counted
+                    for p2 in already_counted.iter() {
+                        if p.starts_with(p2) {
+                            return false;
+                        } else {
+                            continue;
+                        }
+                    }
+                    already_counted.push(p);
+                    true
+                }
+            })
             .map(|e| {
                 // println!("e: {:?}", e);
                 match e {
@@ -215,7 +233,7 @@ pub fn part_1(input: &Tree) -> usize {
                     }
                     (p, Entry::Dir) => {
                         println!("dir: {:?}", p);
-                        let a = input.size(p);
+                        let a = input.size_shallow(p);
                         println!("a: {:?}", a);
                         a
                     }
