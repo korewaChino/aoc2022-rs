@@ -222,21 +222,14 @@ pub fn part_1(input: &Tree) -> usize {
                     }
                     (p, Entry::Dir) => {
                         //println!("dir: {:?}", p);
-                        let a = input.size_shallow(p);
                         //println!("a: {:?}", a);
-                        a
+                        input.size_shallow(p)
                     }
                 }
             })
             .filter(|s| {
                 // //println!("s: {:?}", s);
-                if *s <= 100000 {
-                    //println!("true");
-                    true
-                } else {
-                    //println!("false");
-                    false
-                }
+                *s <= 100000
             })
             .collect::<Vec<usize>>();
 
