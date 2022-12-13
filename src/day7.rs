@@ -13,12 +13,12 @@ pub fn generator(input: &str) -> Tree {
 
     let mut pbuf = PathBuf::from("/");
     while let Some(out) = lines.next() {
-        println!("out: {:?}", out);
+        // //println!("out: {:?}", out);
         if out.starts_with('$') {
-            println!("{:?}", out);
+            ////println!("{:?}", out);
             if out[2..].starts_with("cd") {
                 let cd = &out[5..];
-                // println!("cd: {:?}", cd);
+                // //println!("cd: {:?}", cd);
 
                 if cd.starts_with('/') {
                     pbuf = PathBuf::from(cd);
@@ -26,35 +26,35 @@ pub fn generator(input: &str) -> Tree {
                     pbuf = pbuf.join(cd).absolutize().unwrap().to_path_buf();
                 }
 
-                println!("cd: {:?}", cd);
+                //println!("cd: {:?}", cd);
 
-                println!("dir_buf: {:?}", pbuf);
+                //println!("dir_buf: {:?}", pbuf);
                 continue;
             } else if out[2..].starts_with("ls") {
             }
         } else {
             let mut parts = out.split_whitespace();
-            // println!("parts: {:?}", parts);
+            // //println!("parts: {:?}", parts);
             let size = parts.next().unwrap();
-            // println!("size: {:?}", size);
+            // //println!("size: {:?}", size);
 
             // if the size is a number, then it's a file
             if let Ok(size) = size.parse::<usize>() {
                 let name = parts.next().unwrap();
                 let path = pbuf.join(name);
-                // println!("path: {:?}", path);
+                // //println!("path: {:?}", path);
                 sizes.insert(path, Entry::File(size));
             } else {
                 // dir
                 let name = parts.next().unwrap();
                 let path = pbuf.join(name);
-                // println!("path: {:?}", path);
-                println!("is dir: {:?}", name);
+                // //println!("path: {:?}", path);
+                //println!("is dir: {:?}", name);
                 sizes.insert(path, Entry::Dir);
             }
         }
     }
-    // println!("sizes: {:#?}", sizes);
+    // //println!("sizes: {:#?}", sizes);
     Tree { inner: sizes }
 }
 
@@ -114,39 +114,39 @@ impl Tree {
 
     pub fn size(&self, path: &PathBuf) -> usize {
         // let mut already_counted = Vec::new();
-        // println!("du -s {:?}", path);
+        // //println!("du -s {:?}", path);
 
-        // println!("{:#?}", self.ls(path));
+        // //println!("{:#?}", self.ls(path));
 
         match self.get(path) {
             Some(Entry::File(size)) => *size,
             Some(Entry::Dir) => {
                 let mut size = 0;
                 for (p, e) in self.iter() {
-                    // println!("size: {:?}", p);
+                    // //println!("size: {:?}", p);
                     if p == path {
                         continue;
                     }
                     if p.starts_with(path) {
-                        // println!("p: {:?}", p);
+                        // //println!("p: {:?}", p);
                         size += match e {
                             Entry::File(size) => *size,
                             // found the infinite loop
                             Entry::Dir => {
-                                // println!("found dir: {:?}", p);
+                                // //println!("found dir: {:?}", p);
                                 // if it's trying to size itself, skip it
                                 if p == path || self.is_empty(p) {
-                                    // println!("empty: {:?}", p);
+                                    // //println!("empty: {:?}", p);
                                     0
                                 } else {
                                     let mut s = 0;
 
                                     // recursively add the size of the directory
                                     for (p, e) in self.ls(p) {
-                                        // println!("p2: {:?}", p);
+                                        // //println!("p2: {:?}", p);
                                         s += match e {
                                             Entry::File(size) => {
-                                                // println!("size: {:?}", size);
+                                                // //println!("size: {:?}", size);
                                                 *size
                                             }
                                             Entry::Dir => self.size(&p),
@@ -158,7 +158,7 @@ impl Tree {
                         }
                     }
                 }
-                // println!("size: {:?}", size);
+                // //println!("size: {:?}", size);
                 size
             }
             None => 0,
@@ -214,37 +214,37 @@ pub fn part_1(input: &Tree) -> usize {
                 }
             })
             .map(|e| {
-                // println!("e: {:?}", e);
+                // //println!("e: {:?}", e);
                 match e {
                     (_p, Entry::File(s)) => {
-                        // println!("file: {:?}", p);
+                        // //println!("file: {:?}", p);
                         *s
                     }
                     (p, Entry::Dir) => {
-                        println!("dir: {:?}", p);
+                        //println!("dir: {:?}", p);
                         let a = input.size_shallow(p);
-                        println!("a: {:?}", a);
+                        //println!("a: {:?}", a);
                         a
                     }
                 }
             })
             .filter(|s| {
-                // println!("s: {:?}", s);
+                // //println!("s: {:?}", s);
                 if *s <= 100000 {
-                    println!("true");
+                    //println!("true");
                     true
                 } else {
-                    println!("false");
+                    //println!("false");
                     false
                 }
             })
             .collect::<Vec<usize>>();
 
-        println!("res: {:?}", res);
+        //println!("res: {:?}", res);
         res
     };
 
-    // println!("bigfolders: {:#?}", bigfolders);
+    // //println!("bigfolders: {:#?}", bigfolders);
     bigfolders.iter().sum::<usize>()
 
     // bigfolders.iter().map(|(_, size, _)| size).sum()
@@ -278,16 +278,16 @@ pub fn part_2(input: &Tree) -> usize {
             }
         })
         .map(|e| {
-            // println!("e: {:?}", e);
+            // //println!("e: {:?}", e);
             match e {
                 (_p, Entry::File(s)) => {
-                    // println!("file: {:?}", p);
+                    // //println!("file: {:?}", p);
                     *s
                 }
                 (p, Entry::Dir) => {
-                    println!("dir: {:?}", p);
+                    //println!("dir: {:?}", p);
                     let a = input.size_shallow(p);
-                    println!("a: {:?}", a);
+                    //println!("a: {:?}", a);
                     a
                 }
             }
@@ -296,10 +296,10 @@ pub fn part_2(input: &Tree) -> usize {
 
     // let usage = folders.iter();
 
-    println!("usage: {:?}", usage);
+    //println!("usage: {:?}", usage);
 
     let needed = REQUIRED - (TOTAL - usage);
-    println!("needed: {:?}", needed);
+    //println!("needed: {:?}", needed);
 
     // let mut files = Vec::new();
 
@@ -313,23 +313,23 @@ pub fn part_2(input: &Tree) -> usize {
             }
         })
         .map(|e| {
-            // println!("e: {:?}", e);
+            // //println!("e: {:?}", e);
             match e {
                 (_p, Entry::File(s)) => {
-                    // println!("file: {:?}", p);
+                    // //println!("file: {:?}", p);
                     *s
                 }
                 (p, Entry::Dir) => {
-                    println!("dir: {:?}", p);
+                    //println!("dir: {:?}", p);
                     let a = input.size_shallow(p);
-                    println!("a: {:?}", a);
+                    //println!("a: {:?}", a);
                     a
                 }
             }
         })
         .collect::<Vec<usize>>();
 
-    println!("res: {:?}", res);
+    //println!("res: {:?}", res);
 
     *res.iter().filter(|s| **s >= needed).min().unwrap()
 }
